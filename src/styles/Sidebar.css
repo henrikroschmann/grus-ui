@@ -1,8 +1,14 @@
 .active-menu-item {
-    background-color: #1890ff;
-    color: #fff;
-  }
+  background-color: #1890ff;
+  color: #fff;
+  border-radius: 0px !important;
+}
 
-  .submenu {
-    margin-left: 2px;
-  }
+.ant-menu-item:hover {
+  background: #1890ff !important;
+  border-radius: 0px !important;
+}
+
+.ant-menu-item {
+  padding-left: 20px !important;
+}

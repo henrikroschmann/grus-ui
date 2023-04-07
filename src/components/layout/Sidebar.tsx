@@ -7,6 +7,8 @@ import SubMenu from "antd/es/menu/SubMenu";
 import "../../styles/Sidebar.css";
 import { ThemeContext } from "./ThemeContext";
 import { MenuItem } from "../../types/MenuItem";
+import { getFlatRoutes } from "../../utils/routesUtils";
+
 
 interface SidebarProps {
   isMobile: boolean;
@@ -23,7 +25,9 @@ const SidebarMenuItem = ({
   onMenuItemClick,
 }: SidebarMenuItemProps) => {
   const location = useLocation();
-  const route = menuItem.route;
+  const flatRoutes = getFlatRoutes();
+  const flatRoute = flatRoutes.find((r) => r.key === menuItem.key);
+  const route = flatRoute?.route || "";
 
   // Determine if the NavLink should be active
   const isActive = location.pathname === route;
@@ -48,13 +52,11 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
 
   useEffect(() => {
     const handleResize = () => {
-      console.log(window.innerWidth);
       if (window.innerWidth >= 1400) {
         // Medium breakpoint
         setCollapsed(false);
         setIsMobile(false);
-      }
-      else if (window.innerWidth < 768) {
+      } else if (window.innerWidth < 768) {
         setIsMobile(true);
       } else {
         setCollapsed(true);
@@ -82,7 +84,6 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
             key={menuItem.key}
             icon={menuItem.icon}
             title={menuItem.title}
-            className="submenu"
           >
             {renderMenuItems(menuItem.children, route)}
           </SubMenu>
@@ -92,7 +93,7 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
       return (
         <SidebarMenuItem
           key={menuItem.key}
-          menuItem={menuItem}          
+          menuItem={menuItem}
           onMenuItemClick={(key) => setSelectedKeys([key])}
         />
       );
@@ -107,7 +108,7 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
       onCollapse={(value) => setCollapsed(value)}
     >
       <div className="logo" />
-      <Menu      
+      <Menu
         theme={theme}
         selectedKeys={selectedKeys}
         mode={isMobile ? "horizontal" : "inline"}
