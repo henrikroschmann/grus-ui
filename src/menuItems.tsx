@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 import Option1 from "./components/pages/Option1";
 import { MenuItem } from "./types/MenuItem";
+import Dashboard from "./components/pages/Dashboard";
 
 export const items: MenuItem[] = [
   {
@@ -21,7 +22,7 @@ export const items: MenuItem[] = [
     key: "2",
     icon: <DesktopOutlined />,
     route: "/option2",
-    component: Option1,
+    component: Dashboard,
   },
   {
     title: "User",
