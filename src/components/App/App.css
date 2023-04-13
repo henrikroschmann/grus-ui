@@ -13,6 +13,10 @@
   margin-left: 20px; /* width of the Sidebar */
 }
 
+.site-layout-mobile {
+  margin-top: 110px;
+}
+
 .site-content {
   margin: 24px;
   padding: 24px 10px; /* add 10px padding on left and right sides */

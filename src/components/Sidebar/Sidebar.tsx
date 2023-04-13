@@ -4,11 +4,13 @@ import Sider from "antd/es/layout/Sider";
 import { useContext, useEffect, useState } from "react";
 import { items } from "../../menuItems";
 import SubMenu from "antd/es/menu/SubMenu";
-import "../../styles/Sidebar.css";
-import { ThemeContext } from "./ThemeContext";
+import "./Sidebar.css";
+
 import { MenuItem } from "../../types/MenuItem";
-import { getFlatRoutes } from "../../utils/routesUtils";
+
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { getFlatRoutes } from "../../routes/routesUtils";
+import { ThemeContext } from "../../ThemeContext";
 
 interface SidebarProps {
   isMobile: boolean;
@@ -76,7 +78,7 @@ const Sidebar = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [setIsMobile]);
+  }, [setIsMobile, setCollapsed]);
 
   const renderMenuItems = (menuItems: any[], parentRoute: string) => {
     return menuItems.map((menuItem) => {
@@ -112,7 +114,11 @@ const Sidebar = ({
       collapsible={!isMobile}
       collapsed={!isMobile && collapsed}
       onCollapse={setCollapsed}
-      style={{ position: "fixed", height: "100%", zIndex: 1 }}
+      style={{
+        position: "fixed",
+        height: isMobile ? "auto" : "100%",
+        zIndex: 1,
+      }}
     >
       <div className="logo" />
       <Menu
@@ -122,11 +128,13 @@ const Sidebar = ({
       >
         {renderMenuItems(items, "")}
       </Menu>
-      <div style={{ position: "absolute", right: 0 }}>
-        <Button type="text" onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </Button>
-      </div>
+      {!isMobile && (
+        <div style={{ position: "absolute", right: 0 }}>
+          <Button type="text" onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
+        </div>
+      )}
     </Sider>
   );
 };
