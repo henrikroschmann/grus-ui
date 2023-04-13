@@ -12,3 +12,11 @@
 .ant-menu-item {
   padding-left: 20px !important;
 }
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+}

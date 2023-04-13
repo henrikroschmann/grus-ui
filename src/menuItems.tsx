@@ -5,23 +5,27 @@ import {
   TeamOutlined,
   FileOutlined,
 } from "@ant-design/icons";
-import Option1 from "./components/pages/Option1";
+
 import { MenuItem } from "./types/MenuItem";
+import AddToBudgetForm from "./components/AddToBudgetForm/AddToBudgetForm";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Option1 from "./pages/Option1/Option1";
+import PersonalBudget from "./pages/PersonalBudget/PersonalBudget";
 
 export const items: MenuItem[] = [
   {
-    title: "Option 1",
+    title: "Example table",
     key: "1",
     icon: <PieChartOutlined />,
     route: "/",
-    component: Option1,
+    component: PersonalBudget,
   },
   {
-    title: "Option 2",
+    title: "Example Dashboard",
     key: "2",
     icon: <DesktopOutlined />,
     route: "/option2",
-    component: Option1,
+    component: Dashboard,
   },
   {
     title: "User",
@@ -72,10 +76,10 @@ export const items: MenuItem[] = [
     ],
   },
   {
-    title: "Files",
+    title: "Example form with validation",
     key: "9",
     icon: <FileOutlined />,
     route: "/files",
-    component: Option1,
+    component: AddToBudgetForm,
   },
 ];

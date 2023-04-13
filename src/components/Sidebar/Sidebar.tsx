@@ -1,18 +1,22 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Menu } from "antd";
+import { Button, Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { useContext, useEffect, useState } from "react";
 import { items } from "../../menuItems";
 import SubMenu from "antd/es/menu/SubMenu";
-import "../../styles/Sidebar.css";
-import { ThemeContext } from "./ThemeContext";
-import { MenuItem } from "../../types/MenuItem";
-import { getFlatRoutes } from "../../utils/routesUtils";
+import "./Sidebar.css";
 
+import { MenuItem } from "../../types/MenuItem";
+
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { getFlatRoutes } from "../../routes/routesUtils";
+import { ThemeContext } from "../../ThemeContext";
 
 interface SidebarProps {
   isMobile: boolean;
   setIsMobile: (value: boolean) => void;
+  collapsed: boolean;
+  setCollapsed: (value: boolean) => void;
 }
 
 interface SidebarMenuItemProps {
@@ -45,9 +49,13 @@ const SidebarMenuItem = ({
   );
 };
 
-const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
+const Sidebar = ({
+  isMobile,
+  setIsMobile,
+  collapsed,
+  setCollapsed,
+}: SidebarProps) => {
   const [theme] = useContext(ThemeContext);
-  const [collapsed, setCollapsed] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([""]);
 
   useEffect(() => {
@@ -70,7 +78,7 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [setIsMobile]);
+  }, [setIsMobile, setCollapsed]);
 
   const renderMenuItems = (menuItems: any[], parentRoute: string) => {
     return menuItems.map((menuItem) => {
@@ -105,7 +113,12 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
       width={isMobile ? "100%" : 200}
       collapsible={!isMobile}
       collapsed={!isMobile && collapsed}
-      onCollapse={(value) => setCollapsed(value)}
+      onCollapse={setCollapsed}
+      style={{
+        position: "fixed",
+        height: isMobile ? "auto" : "100%",
+        zIndex: 1,
+      }}
     >
       <div className="logo" />
       <Menu
@@ -115,6 +128,13 @@ const Sidebar = ({ isMobile, setIsMobile }: SidebarProps) => {
       >
         {renderMenuItems(items, "")}
       </Menu>
+      {!isMobile && (
+        <div style={{ position: "absolute", right: 0 }}>
+          <Button type="text" onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
+        </div>
+      )}
     </Sider>
   );
 };
