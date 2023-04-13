@@ -1,85 +1,54 @@
-import {
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, PicLeftOutlined } from "@ant-design/icons";
 
 import { MenuItem } from "./types/MenuItem";
-import AddToBudgetForm from "./components/AddToBudgetForm/AddToBudgetForm";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Option1 from "./pages/Option1/Option1";
-import PersonalBudget from "./pages/PersonalBudget/PersonalBudget";
+import UserProfile from "./pages/UserProfile/UserProfile";
+import SignIn from "./components/auth/SignIn";
+import Register from "./components/auth/Register";
+import SignOut from "./components/auth/SignOut";
+import Budgets from "./pages/Budget/Budgets";
 
 export const items: MenuItem[] = [
   {
-    title: "Example table",
-    key: "1",
-    icon: <PieChartOutlined />,
+    title: "Dashboard",
+    key: "dashboard",
+    icon: <PicLeftOutlined />,
     route: "/",
-    component: PersonalBudget,
-  },
-  {
-    title: "Example Dashboard",
-    key: "2",
-    icon: <DesktopOutlined />,
-    route: "/option2",
     component: Dashboard,
   },
   {
-    title: "User",
-    key: "sub1",
+    title: "Budgets",
+    key: "budget",
+    icon: <PicLeftOutlined />,
+    route: "/budget",
+    component: Budgets,
+  },
+  {
+    title: "User Profile",
+    key: "user",
     icon: <UserOutlined />,
-    route: "/user",
-    component: Option1,
-    children: [
-      {
-        title: "Tom",
-        key: "3",
-        route: "tom",
-        component: Option1,
-      },
-      {
-        title: "Bill",
-        key: "4",
-        route: "bill",
-        component: Option1,
-      },
-      {
-        title: "Alex",
-        key: "5",
-        route: "alex",
-        component: Option1,
-      },
-    ],
+    route: "/profile",
+    component: UserProfile,
   },
   {
-    title: "Team",
-    key: "sub2",
-    icon: <TeamOutlined />,
-    route: "/team",
-    component: Option1,
-    children: [
-      {
-        title: "Team 1",
-        key: "6",
-        route: "/team1",
-        component: Option1,
-      },
-      {
-        title: "Team 2",
-        key: "8",
-        route: "/team2",
-        component: Option1,
-      },
-    ],
+    title: "SignIn",
+    key: "signIn",
+    icon: <UserOutlined />,
+    route: "/signIN",
+    component: SignIn,
   },
   {
-    title: "Example form with validation",
-    key: "9",
-    icon: <FileOutlined />,
-    route: "/files",
-    component: AddToBudgetForm,
+    title: "Register",
+    key: "register",
+    icon: <UserOutlined />,
+    route: "/register",
+    component: Register,
+  },
+  {
+    title: "SignOut",
+    key: "signout",
+    icon: <UserOutlined />,
+    route: "/signout",
+    component: SignOut,
   },
 ];
