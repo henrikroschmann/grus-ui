@@ -15,6 +15,7 @@ export const items: MenuItem[] = [
     icon: <PicLeftOutlined />,
     route: "/",
     component: Dashboard,
+    protected: true
   },
   {
     title: "Budgets",
@@ -22,6 +23,7 @@ export const items: MenuItem[] = [
     icon: <PicLeftOutlined />,
     route: "/budget",
     component: Budgets,
+    protected: true
   },
   {
     title: "User Profile",
@@ -29,13 +31,15 @@ export const items: MenuItem[] = [
     icon: <UserOutlined />,
     route: "/profile",
     component: UserProfile,
+    protected: true
   },
   {
     title: "SignIn",
     key: "signIn",
     icon: <UserOutlined />,
-    route: "/signIN",
+    route: "/signin",
     component: SignIn,
+    protected: false
   },
   {
     title: "Register",
@@ -43,6 +47,7 @@ export const items: MenuItem[] = [
     icon: <UserOutlined />,
     route: "/register",
     component: Register,
+    protected: false
   },
   {
     title: "SignOut",
@@ -50,5 +55,6 @@ export const items: MenuItem[] = [
     icon: <UserOutlined />,
     route: "/signout",
     component: SignOut,
+    protected: false
   },
 ];

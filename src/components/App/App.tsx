@@ -9,38 +9,41 @@ import ApplicationRouter from "../../routes/ApplicationRouter";
 import ApplicationBreadcrumb from "../Breadcrumb/Breadcrumb";
 import FooterComponent from "../Footer/Footer";
 import Sidebar from "../Sidebar/Sidebar";
+import { AuthProvider } from "../../contexts/AuthContext";
 
 const App: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Layout className="site" hasSider={!isMobile}>
-          <Sidebar
-            isMobile={isMobile}
-            setIsMobile={setIsMobile}
-            collapsed={collapsed}
-            setCollapsed={setCollapsed}
-          />
-          <Layout className={isMobile ? "site-layout-mobile" : "site-layout"}>
-            {/* <Content className={`site-content ${collapsed ? "collapsed" : ""}`}> */}
-            <Content
-              className={
-                isMobile ? "" : `site-content ${collapsed ? "collapsed" : ""}`
-              }
-            >
-              {!isMobile && <ApplicationBreadcrumb />}
-              <div className="site-layout-background">
-                <ApplicationRouter />
-              </div>
-            </Content>
-            <FooterComponent />
+    <AuthProvider>
+      <BrowserRouter>
+        <ThemeProvider>
+          <Layout className="site" hasSider={!isMobile}>
+            <Sidebar
+              isMobile={isMobile}
+              setIsMobile={setIsMobile}
+              collapsed={collapsed}
+              setCollapsed={setCollapsed}
+            />
+            <Layout className={isMobile ? "site-layout-mobile" : "site-layout"}>
+              {/* <Content className={`site-content ${collapsed ? "collapsed" : ""}`}> */}
+              <Content
+                className={
+                  isMobile ? "" : `site-content ${collapsed ? "collapsed" : ""}`
+                }
+              >
+                {!isMobile && <ApplicationBreadcrumb />}
+                <div className="site-layout-background">
+                  <ApplicationRouter />
+                </div>
+              </Content>
+              <FooterComponent />
+            </Layout>
           </Layout>
-        </Layout>
-      </ThemeProvider>
-    </BrowserRouter>
+        </ThemeProvider>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

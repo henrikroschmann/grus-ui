@@ -1,9 +1,12 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { items } from "../menuItems";
-import React from "react";
+import React, { useContext } from "react";
 import { MenuItem } from "../types/MenuItem";
+import { AuthContext } from "../contexts/AuthContext";
 
 const ApplicationRouter = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+
   const renderRoutes = (menuItems: MenuItem[]) =>
     menuItems.map((menuItem) => {
       if (menuItem.children) {
@@ -18,7 +21,13 @@ const ApplicationRouter = () => {
         <Route
           key={menuItem.key}
           path={menuItem.route}
-          element={<menuItem.component />}
+          element={
+            menuItem.protected && !isAuthenticated ? (
+              <Navigate to="/signin" />
+            ) : (
+              <menuItem.component />
+            )
+          }
         />
       );
     });
@@ -30,6 +39,5 @@ const ApplicationRouter = () => {
     </Routes>
   );
 };
-
 
 export default ApplicationRouter;
