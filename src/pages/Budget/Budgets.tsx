@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Row, Col, Table, Space, Popconfirm } from "antd";
 import AddBudget from "../../components/Budget/AddBudget";
-import { Budget } from "../../types/gql-types";
+import { Budget, Expense, Income } from "../../types/gql-types";
 import { generateMockUserProfile } from "../../__mocks__/mock-data";
 
 const Budgets: React.FC = () => {
@@ -10,13 +10,15 @@ const Budgets: React.FC = () => {
   const [addBudgetModalVisible, setAddBudgetModalVisible] = useState(false);
 
   const handleCreateBudget = (newBudget: Omit<Budget, "id">) => {
+    // Replace with API call to add budget, and get the updated budget list
     const updatedBudgets = [
       ...budgets,
       { id: new Date().toISOString(), ...newBudget },
     ];
     setBudgets(updatedBudgets);
     setAddBudgetModalVisible(false);
-  
+
+    // Update mockUserProfile with the new budget list
     const updatedUserProfile = {
       ...mockUserProfile,
       budgets: updatedBudgets,
@@ -25,7 +27,6 @@ const Budgets: React.FC = () => {
     // Replace with API call to update the user profile
     console.log(updatedUserProfile);
   };
-  
 
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
 
@@ -53,7 +54,8 @@ const Budgets: React.FC = () => {
       title: "Date",
       dataIndex: "date",
       key: "date",
-      render: (date: Date | undefined) => date ? new Date(date).toLocaleDateString() : "",
+      render: (date: Date | undefined) =>
+        date ? new Date(date).toLocaleDateString() : "",
       sorter: (a: any, b: any) => {
         const dateA = new Date(a.date).getTime();
         const dateB = new Date(b.date).getTime();
@@ -65,6 +67,102 @@ const Budgets: React.FC = () => {
       dataIndex: "name",
       key: "name",
     },
+    {
+      title: "Income",
+      dataIndex: "incomes",
+      key: "incomes",
+      render: (incomes: Income[], budget: Budget) => {
+        const totalIncome = incomes.reduce(
+          (acc, income) => acc + income.amount,
+          0
+        );
+        return budget.id === budgets[budgets.length - 1].id
+          ? `Total: ${totalIncome}`
+          : totalIncome.toFixed(2);
+      },
+    },
+    {
+      title: "Expense",
+      dataIndex: "expenses",
+      key: "expenses",
+      render: (expenses: Expense[], budget: Budget) => {
+        const totalExpense = expenses.reduce(
+          (acc, expense) => acc + expense.amount,
+          0
+        );
+        const percent =
+          ((totalExpense > 0
+            ? expenses.reduce((acc, expense) => acc + expense.amount, 0)
+            : 1) /
+            totalExpense) *
+          100;
+        return (
+          <>
+            <span>{`$${totalExpense.toFixed(2)}`}</span>
+            <div
+              style={{
+                width: "100%",
+                height: 8,
+                marginTop: 4,
+                maxWidth: "100%",
+              }}
+            >
+              <div
+                style={{
+                  width: `${Math.min(percent, 100).toFixed(2)}%`,
+                  height: "100%",
+                  backgroundColor: "#1890ff",
+                }}
+              />
+            </div>
+            <div style={{ marginTop: 4 }}>
+              <span>{`${Math.min(percent, 100).toFixed(
+                2
+              )}% of total expenses`}</span>
+            </div>
+          </>
+        );
+      },
+    },
+    {
+      title: "Savings",
+      dataIndex: "savings",
+      key: "savings",
+      render: (savings: number, budget: Budget) => {
+        const totalSavings =
+          budget.incomes.reduce((acc, income) => acc + income.amount, 0) -
+          budget.expenses.reduce((acc, expense) => acc + expense.amount, 0);
+        const percent =
+          ((totalSavings > 0 ? totalSavings : 1) / totalSavings) * 100;
+        return (
+          <>
+            <span>{`$${totalSavings.toFixed(2)}`}</span>
+            <div
+              style={{
+                width: "100%",
+                height: 8,
+                marginTop: 4,
+                maxWidth: "100%",
+              }}
+            >
+              <div
+                style={{
+                  width: `${Math.min(percent, 100).toFixed(2)}%`,
+                  height: "100%",
+                  backgroundColor: "#52c41a",
+                }}
+              />
+            </div>
+            <div style={{ marginTop: 4 }}>
+              <span>{`${Math.min(percent, 100).toFixed(
+                2
+              )}% of total savings`}</span>
+            </div>
+          </>
+        );
+      },
+    },
+
     {
       title: "Actions",
       key: "actions",
@@ -102,10 +200,10 @@ const Budgets: React.FC = () => {
             onCancel={() => {
               setAddBudgetModalVisible(false);
               setEditingBudget(null);
-            }}            
+            }}
             title={editingBudget ? "Edit Budget" : "Add Budget"}
             okText={editingBudget ? "Update" : "Create"}
-            editingBudget={editingBudget}           
+            editingBudget={editingBudget}
             previousBudget={budgets[budgets.length - 1]}
             initialStep={0}
           />

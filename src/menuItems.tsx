@@ -1,4 +1,4 @@
-import { UserOutlined, PicLeftOutlined } from "@ant-design/icons";
+import { UserOutlined, PicLeftOutlined, LoginOutlined, LogoutOutlined, UserAddOutlined, TableOutlined } from "@ant-design/icons";
 
 import { MenuItem } from "./types/MenuItem";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -20,7 +20,7 @@ export const items: MenuItem[] = [
   {
     title: "Budgets",
     key: "budget",
-    icon: <PicLeftOutlined />,
+    icon: <TableOutlined />,
     route: "/budget",
     component: Budgets,
     protected: true
@@ -44,7 +44,7 @@ export const items: MenuItem[] = [
   {
     title: "Register",
     key: "register",
-    icon: <UserOutlined />,
+    icon: <UserAddOutlined />,
     route: "/register",
     component: Register,
     protected: false
@@ -52,7 +52,7 @@ export const items: MenuItem[] = [
   {
     title: "SignOut",
     key: "signout",
-    icon: <UserOutlined />,
+    icon: <LogoutOutlined />,
     route: "/signout",
     component: SignOut,
     protected: false

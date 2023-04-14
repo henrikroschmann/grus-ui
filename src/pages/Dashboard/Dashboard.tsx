@@ -1,5 +1,6 @@
-import React, {  } from "react";
-import { Row, Col, Card } from "antd";
+import React from "react";
+import { Row, Col, Card, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 import { Chart } from "chart.js";
 import {
   LinearScale,
@@ -59,6 +60,12 @@ const Dashboard: React.FC = () => {
     }
   );
 
+  const nav = useNavigate();
+
+  const handleViewBudgetsClick = () => {
+    nav("/budget");
+  };
+
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -72,6 +79,9 @@ const Dashboard: React.FC = () => {
         <Col xs={24}>
           <Card title="Budgets">
             <BudgetTable dataSource={processedBudgets} />
+            <Button type="primary" onClick={handleViewBudgetsClick}>
+              View All Budgets
+            </Button>
           </Card>
         </Col>
       </Row>
