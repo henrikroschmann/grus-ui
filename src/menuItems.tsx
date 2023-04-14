@@ -2,7 +2,6 @@ import {
   PieChartOutlined,
   DesktopOutlined,
   UserOutlined,
-  TeamOutlined,
   FileOutlined,
 } from "@ant-design/icons";
 
@@ -19,6 +18,7 @@ export const items: MenuItem[] = [
     icon: <PieChartOutlined />,
     route: "/",
     component: PersonalBudget,
+    protected: false,
   },
   {
     title: "Example Dashboard",
@@ -26,6 +26,7 @@ export const items: MenuItem[] = [
     icon: <DesktopOutlined />,
     route: "/option2",
     component: Dashboard,
+    protected: false,
   },
   {
     title: "User",
@@ -33,45 +34,28 @@ export const items: MenuItem[] = [
     icon: <UserOutlined />,
     route: "/user",
     component: Option1,
+    protected: false,
     children: [
       {
         title: "Tom",
         key: "3",
         route: "tom",
         component: Option1,
+        protected: false,
       },
       {
         title: "Bill",
         key: "4",
         route: "bill",
         component: Option1,
+        protected: false,
       },
       {
         title: "Alex",
         key: "5",
         route: "alex",
         component: Option1,
-      },
-    ],
-  },
-  {
-    title: "Team",
-    key: "sub2",
-    icon: <TeamOutlined />,
-    route: "/team",
-    component: Option1,
-    children: [
-      {
-        title: "Team 1",
-        key: "6",
-        route: "/team1",
-        component: Option1,
-      },
-      {
-        title: "Team 2",
-        key: "8",
-        route: "/team2",
-        component: Option1,
+        protected: false,
       },
     ],
   },
@@ -80,6 +64,15 @@ export const items: MenuItem[] = [
     key: "9",
     icon: <FileOutlined />,
     route: "/files",
+    protected: false,
+    component: AddToBudgetForm,
+  },
+  {
+    title: "Protected route",
+    key: "9",
+    icon: <FileOutlined />,
+    route: "/protected",
+    protected: true,
     component: AddToBudgetForm,
   },
 ];

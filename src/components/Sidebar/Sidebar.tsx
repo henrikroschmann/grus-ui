@@ -11,6 +11,7 @@ import { MenuItem } from "../../types/MenuItem";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { getFlatRoutes } from "../../routes/routesUtils";
 import { ThemeContext } from "../../ThemeContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 interface SidebarProps {
   isMobile: boolean;
@@ -55,6 +56,7 @@ const Sidebar = ({
   collapsed,
   setCollapsed,
 }: SidebarProps) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const [theme] = useContext(ThemeContext);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([""]);
 
@@ -86,16 +88,20 @@ const Sidebar = ({
         ? `${parentRoute}/${menuItem.route}`
         : menuItem.route;
 
-      if (menuItem.children) {
+      if (menuItem.items) {
         return (
           <SubMenu
             key={menuItem.key}
             icon={menuItem.icon}
             title={menuItem.title}
           >
-            {renderMenuItems(menuItem.children, route)}
+            {renderMenuItems(menuItem.items, route)}
           </SubMenu>
         );
+      }
+
+      if (menuItem.protected && !isAuthenticated) {
+        return null; // hide the protected menu item
       }
 
       return (
@@ -121,6 +127,7 @@ const Sidebar = ({
       }}
     >
       <div className="logo" />
+
       <Menu
         theme={theme}
         selectedKeys={selectedKeys}
