@@ -1,52 +1,100 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { Button, Row, Col, Table, Space, Popconfirm } from "antd";
 import AddBudget from "../../components/Budget/AddBudget";
-import { Budget, Expense, Income } from "../../types/gql-types";
-import { generateMockUserProfile } from "../../__mocks__/mock-data";
+import { Budget, Expense, Income, Query } from "../../types/gql-types";
+import { GET_USER_PROFILE } from "../../graphQL/queries/getUserProfile";
+import { CREATE_BUDGET } from "../../graphQL/mutations/createBudget";
+import { UPDATE_BUDGET } from "../../graphQL/mutations/updateBudget";
+import client from "../../graphQL/client";
 
 const Budgets: React.FC = () => {
-  const mockUserProfile = generateMockUserProfile();
-  const [budgets, setBudgets] = useState<Budget[]>(mockUserProfile.budgets);
   const [addBudgetModalVisible, setAddBudgetModalVisible] = useState(false);
+  const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
+  const { data } = useQuery<Query>(GET_USER_PROFILE);
+  const [createBudget] = useMutation(CREATE_BUDGET);
+  const [updateBudget] = useMutation(UPDATE_BUDGET);
 
-  const handleCreateBudget = (newBudget: Omit<Budget, "id">) => {
-    // Replace with API call to add budget, and get the updated budget list
-    const updatedBudgets = [
-      ...budgets,
-      { id: new Date().toISOString(), ...newBudget },
-    ];
-    setBudgets(updatedBudgets);
+  const handleCreateBudget = async (newBudget: Budget) => {
+    await createBudget({
+      variables: {
+        input: {
+          name: newBudget.name,
+          date: new Date().toISOString(),
+          incomes: newBudget.incomes.map((i) => ({
+            source: i.source,
+            amount: i.amount,
+          })),
+          expenses: newBudget.expenses.map((e) => ({
+            category: e.category,
+            description: e.description,
+            amount: e.amount,
+            recurring: e.recurring || false,
+          })),
+          savings: newBudget.savings.map((s) => ({
+            name: s.name,
+            amount: s.amount,
+          })),
+        },
+      },
+    });
     setAddBudgetModalVisible(false);
-
-    // Update mockUserProfile with the new budget list
-    const updatedUserProfile = {
-      ...mockUserProfile,
-      budgets: updatedBudgets,
-    };
-    // Update the mockUserProfile
-    // Replace with API call to update the user profile
-    console.log(updatedUserProfile);
   };
 
-  const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
+  const handleUpdateBudget = async (updatedBudget: Budget) => {
+    await updateBudget({
+      variables: {
+        id: updatedBudget.id,
+        updatedBudget: {
+          name: updatedBudget.name,
+          date: updatedBudget.date,
+          incomes: updatedBudget.incomes.map((i) => ({
+            source: i.source,
+            amount: i.amount,
+          })),
+          expenses: updatedBudget.expenses.map((e) => ({
+            category: e.category,
+            description: e.description,
+            amount: e.amount,
+            recurring: e.recurring || false,
+          })),
+          savings: updatedBudget.savings.map((s) => ({
+            name: s.name,
+            amount: s.amount,
+          })),
+        },
+      },
+    });
+    setEditingBudget(null);
+    setAddBudgetModalVisible(false);
+  };
+
+  const handleCancelBudget =() => {
+    setEditingBudget(null)
+    setAddBudgetModalVisible(false)
+  }
 
   const handleEditBudget = (budget: Budget) => {
     setEditingBudget(budget);
     setAddBudgetModalVisible(true);
   };
 
-  const handleUpdateBudget = (updatedBudget: Omit<Budget, "id">) => {
-    const updatedBudgets = budgets.map((budget) =>
-      budget.id === editingBudget?.id ? { ...budget, ...updatedBudget } : budget
-    );
-    setBudgets(updatedBudgets);
-    setAddBudgetModalVisible(false);
-    setEditingBudget(null);
-  };
-
   const handleDeleteBudget = (budgetId: string) => {
-    const updatedBudgets = budgets.filter((budget) => budget.id !== budgetId);
-    setBudgets(updatedBudgets);
+    const updatedBudgets = data?.getUserProfile?.budgets.filter(
+      (budget) => budget.id !== budgetId
+    );
+    if (updatedBudgets) {
+      const updatedData = {
+        getUserProfile: {
+          ...data!.getUserProfile,
+          budgets: updatedBudgets,
+        },
+      };
+      client.writeQuery({
+        query: GET_USER_PROFILE,
+        data: updatedData,
+      });
+    }
   };
 
   const columns = [
@@ -71,14 +119,10 @@ const Budgets: React.FC = () => {
       title: "Income",
       dataIndex: "incomes",
       key: "incomes",
-      render: (incomes: Income[], budget: Budget) => {
-        const totalIncome = incomes.reduce(
-          (acc, income) => acc + income.amount,
-          0
-        );
-        return budget.id === budgets[budgets.length - 1].id
-          ? `Total: ${totalIncome}`
-          : totalIncome.toFixed(2);
+      render: (incomes: Income[] | null, budget: Budget) => {
+        const totalIncome =
+          incomes?.reduce((acc, income) => acc + income.amount, 0) || 0;
+        return `Total: ${totalIncome}`;
       },
     },
     {
@@ -90,12 +134,11 @@ const Budgets: React.FC = () => {
           (acc, expense) => acc + expense.amount,
           0
         );
+        const income = data?.userProfile.budgets
+          .find((b) => b.id === budget.id)
+          ?.incomes.reduce((acc, income) => acc + income.amount, 0);
         const percent =
-          ((totalExpense > 0
-            ? expenses.reduce((acc, expense) => acc + expense.amount, 0)
-            : 1) /
-            totalExpense) *
-          100;
+          ((totalExpense > 0 ? totalExpense : 1) / (income || 1)) * 100;
         return (
           <>
             <span>{`$${totalExpense.toFixed(2)}`}</span>
@@ -118,7 +161,7 @@ const Budgets: React.FC = () => {
             <div style={{ marginTop: 4 }}>
               <span>{`${Math.min(percent, 100).toFixed(
                 2
-              )}% of total expenses`}</span>
+              )}% of total income`}</span>
             </div>
           </>
         );
@@ -129,11 +172,17 @@ const Budgets: React.FC = () => {
       dataIndex: "savings",
       key: "savings",
       render: (savings: number, budget: Budget) => {
-        const totalSavings =
-          budget.incomes.reduce((acc, income) => acc + income.amount, 0) -
-          budget.expenses.reduce((acc, expense) => acc + expense.amount, 0);
+        const totalIncome = budget.incomes.reduce(
+          (acc, income) => acc + income.amount,
+          0
+        );
+        const totalExpense = budget.expenses.reduce(
+          (acc, expense) => acc + expense.amount,
+          0
+        );
+        const totalSavings = totalIncome - totalExpense;
         const percent =
-          ((totalSavings > 0 ? totalSavings : 1) / totalSavings) * 100;
+          ((totalSavings > 0 ? totalSavings : 1) / totalIncome) * 100;
         return (
           <>
             <span>{`$${totalSavings.toFixed(2)}`}</span>
@@ -156,7 +205,7 @@ const Budgets: React.FC = () => {
             <div style={{ marginTop: 4 }}>
               <span>{`${Math.min(percent, 100).toFixed(
                 2
-              )}% of total savings`}</span>
+              )}% of total income`}</span>
             </div>
           </>
         );
@@ -197,17 +246,22 @@ const Budgets: React.FC = () => {
           <AddBudget
             visible={addBudgetModalVisible}
             onCreate={editingBudget ? handleUpdateBudget : handleCreateBudget}
-            onCancel={() => {
-              setAddBudgetModalVisible(false);
-              setEditingBudget(null);
-            }}
+            onCancel={handleCancelBudget}
             title={editingBudget ? "Edit Budget" : "Add Budget"}
             okText={editingBudget ? "Update" : "Create"}
             editingBudget={editingBudget}
-            previousBudget={budgets[budgets.length - 1]}
+            previousBudget={data?.userProfile.budgets ?
+              data?.userProfile?.budgets[
+                data?.userProfile.budgets.length - 1
+              ] : null
+            }
             initialStep={0}
           />
-          <Table columns={columns} dataSource={budgets} rowKey="id" />
+          <Table
+            columns={columns}
+            dataSource={data?.userProfile?.budgets || []}
+            rowKey="id"
+          />
         </Col>
       </Row>
     </>

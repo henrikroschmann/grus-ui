@@ -12,7 +12,7 @@ export interface Income {
     recurring: boolean;
   }
   
-  export interface Savings {
+  export interface Saving {
     id: string;
     name: string;    
     amount: number;    
@@ -24,7 +24,7 @@ export interface Income {
     date: Date;
     incomes: Income[];
     expenses: Expense[];
-    savings: Savings[];
+    savings: Saving[];
   }
   
   export interface UserProfile {
@@ -36,6 +36,9 @@ export interface Income {
   }
   
   export interface Query {
+    userProfile: UserProfile;
     getUserProfile: UserProfile;
   }
-  
+
+  export interface Mutation {
+  }

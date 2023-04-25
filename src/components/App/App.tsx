@@ -9,14 +9,12 @@ import ApplicationRouter from "../../routes/ApplicationRouter";
 import ApplicationBreadcrumb from "../Breadcrumb/Breadcrumb";
 import FooterComponent from "../Footer/Footer";
 import Sidebar from "../Sidebar/Sidebar";
-import { AuthProvider } from "../../contexts/AuthContext";
 
 const App: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  return (
-    <AuthProvider>
+  return (    
       <BrowserRouter>
         <ThemeProvider>
           <Layout className="site" hasSider={!isMobile}>
@@ -42,8 +40,7 @@ const App: React.FC = () => {
             </Layout>
           </Layout>
         </ThemeProvider>
-      </BrowserRouter>
-    </AuthProvider>
+      </BrowserRouter>    
   );
 };
 

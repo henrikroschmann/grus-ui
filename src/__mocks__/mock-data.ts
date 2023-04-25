@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import {
   Income,
   Expense,
-  Savings,
+  Saving,
   Budget,
   UserProfile,
 } from "../types/gql-types";
@@ -26,7 +26,7 @@ function generateMockExpense(): Expense {
   };
 }
 
-function generateMockSavings(): Savings {
+function generateMockSavings(): Saving {
   return {
     id: faker.datatype.uuid(),
     name: faker.commerce.productName(),

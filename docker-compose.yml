@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./
+    ports:
+      - '3000:3000'
+    environment:
+      - REACT_APP_BACKEND_API=http://host.docker.internal:8080
+
+  backend:
+    build: 
+      context: ../grus-api/src/
+      dockerfile: ./Grus-api/Dockerfile
+    ports:
+      - '8080:80'
+    environment:
+      - ConnectionStrings__MongoDB=mongodb://host.docker.internal:27017/Grus 
+      - CORS__AllowedOrigins=http://host.docker.internal:3000
+    depends_on:
+      - mongo
+
+  mongo:
+    image: 'mongo:latest'
+    ports:
+       - '27017:27017'
+    volumes:
+      - 'mongo-data:/data/db'
+
+volumes:
+  mongo-data:

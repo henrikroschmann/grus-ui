@@ -1,17 +1,26 @@
 .signin-card {
-    max-width: 400px;
-    margin: 0 auto;
-    margin-top: 50px;
-  }
-  
-  .signin-input {
-    border-radius: 20px;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-  }
-  
-  .signin-button {
-    border-radius: 20px;
-    padding: 10px 20px;
-  }
-  
+  margin-top: 100px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.signin-form {
+  margin-top: 20px;
+}
+
+.signin-input {
+  border-radius: 6px;
+}
+
+.signin-button {
+  border-radius: 6px;
+  width: 100%;
+  height: 40px;
+  margin-top: 20px;
+}
+
+.signin-button:hover {
+  background-color: #1890ff;
+  color: #fff;
+}

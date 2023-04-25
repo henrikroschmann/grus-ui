@@ -2,16 +2,46 @@ import React from "react";
 import { Form, Input, Button, Card } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import "./Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Register: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-    // Implement your register logic here
+  const nav = useNavigate();
+
+  const onFinish = async (values: any) => {
+    try {     
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_API}/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.title);
+      }
+
+      message.success("Registration was successful");
+      nav("/signin");
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message || "Registration failed");
+      } else {
+        message.error("Registration failed");
+      }
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.error("Failed:", errorInfo);
   };
 
   return (

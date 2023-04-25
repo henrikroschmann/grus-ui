@@ -1,0 +1,73 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .card {
+    width: 600px;
+  }
+  
+  .form-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .form-group {
+    margin-bottom: 24px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    height: 32px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 4px 11px;
+    font-size: 16px;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #40a9ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+  
+  .form-group input:hover {
+    border-color: #40a9ff;
+  }
+  
+  .form-group .ant-form-item-explain {
+    color: #f5222d;
+  }
+  
+  .delete-account-button {
+    background-color: #f5222d;
+    color: white;
+    border-color: #f5222d;
+  }
+  
+  .delete-account-button:hover {
+    background-color: #f5222d;
+    border-color: #f5222d;
+    color: white;
+  }
+  
+  .delete-account-button:active {
+    background-color: #f5222d;
+    border-color: #f5222d;
+    color: white;
+  }

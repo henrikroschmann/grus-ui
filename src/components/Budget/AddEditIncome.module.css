@@ -1,0 +1,28 @@
+.income-form {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .income-row {
+    margin-bottom: 16px;
+  }
+  
+  .income-remove-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .income-remove-icon {
+    font-size: 18px;
+    color: #ff4d4f;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .income-remove-icon:hover {
+    color: #ff7875;
+  }
+  

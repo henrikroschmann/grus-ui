@@ -1,21 +1,23 @@
-import React, { useState } from "react";
-import { DatePicker, Form, Input, Modal, Steps, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Modal, Steps, Button } from "antd";
 import { Budget } from "../../types/gql-types";
 import AddEditIncome from "./AddEditIncome";
 import AddEditExpense from "./AddEditExpense";
 import AddEditSavings from "./AddEditSavings";
+import BudgetForm from "./BudgetForm";
+import ReviewEntries from "./ReviewEntries";
 
 const { Step } = Steps;
 
 interface AddBudgetProps {
   visible: boolean;
-  onCreate: (newBudget: Omit<Budget, "id">) => void;
+  onCreate: (newBudget: Budget) => void;
   onCancel: () => void;
-  title?: string;
-  okText?: string;
-  previousBudget?: Budget | null;
-  editingBudget?: Budget | null;
-  initialStep: number
+  title: string;
+  okText: string;
+  editingBudget: Budget | null;
+  previousBudget: Budget | null;
+  initialStep: number;
 }
 
 const AddBudget: React.FC<AddBudgetProps> = ({
@@ -26,47 +28,75 @@ const AddBudget: React.FC<AddBudgetProps> = ({
   okText = "Create",
   previousBudget = undefined,
   editingBudget = undefined,
-  initialStep = 0
+  initialStep = 0,
 }) => {
-  const [form] = Form.useForm();
-  const [incomesForm] = Form.useForm();
-  const [expensesForm] = Form.useForm();
-  const [savingsForm] = Form.useForm();
-
   const [currentStep, setCurrentStep] = useState(initialStep);
+  const form = Form.useForm()[0];
+
+  const [budget, setBudget] = useState<Budget>({
+    id: "",
+    name: "",
+    date: new Date(),
+    incomes: [],
+    expenses: [],
+    savings: [],
+  });
+
+  useEffect(() => {
+    if (editingBudget) {
+      setBudget(editingBudget);
+    }
+  }, [editingBudget]);
+
+  const next = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        setCurrentStep(currentStep + 1);
+        if (currentStep === 0) {
+          setBudget({
+            ...budget!,
+            ...values,
+          });
+        } else if (currentStep === 1) {
+          setBudget({
+            ...budget!,
+            incomes: values.incomes,
+          });
+        } else if (currentStep === 2) {
+          setBudget({
+            ...budget!,
+            expenses: values.expenses,
+          });
+        } else if (currentStep === 3) {
+          setBudget({
+            ...budget!,
+            savings: values.savings,
+          });
+        }
+      })
+      .catch((info: any) => {
+        console.error("Validate Failed:", info);
+      });
+  };
+
+  const prev = () => {
+    setCurrentStep(currentStep - 1);
+  };
 
   const steps = [
     {
       title: "Budget",
-      content: (
-        <>
-          <Form.Item
-            name="name"
-            label="Budget Name"
-            rules={[
-              { required: true, message: "Please input the budget name!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="date"
-            label="Budget Date"
-            rules={[
-              { required: true, message: "Please select the budget date!" },
-            ]}
-          >
-            <DatePicker />
-          </Form.Item>
-        </>
-      ),
+      content: <BudgetForm form={form} budget={budget} onFinish={() => next} />,
     },
+
     {
       title: "Income",
       content: (
         <AddEditIncome
-          form={incomesForm}
-          initialValues={editingBudget?.incomes || []} //|| previousBudget?.incomes}          
+          initialValues={editingBudget?.incomes || []}
+          previousValues={previousBudget?.incomes || []}
+          form={form}
         />
       ),
     },
@@ -74,8 +104,9 @@ const AddBudget: React.FC<AddBudgetProps> = ({
       title: "Expense",
       content: (
         <AddEditExpense
-          form={expensesForm}
-          initialValues={editingBudget?.expenses || previousBudget?.expenses}
+          initialValues={editingBudget?.expenses || []}
+          previousValues={previousBudget?.expenses || []}
+          form={form}
         />
       ),
     },
@@ -83,46 +114,30 @@ const AddBudget: React.FC<AddBudgetProps> = ({
       title: "Savings",
       content: (
         <AddEditSavings
-          form={savingsForm}
-          initialValues={editingBudget?.savings} // || previousBudget?.savings}
+          initialValues={editingBudget?.savings}
+          previousValues={previousBudget?.savings}
+          form={form}
         />
       ),
     },
+    {
+      title: "Review",
+      content: <ReviewEntries form={form} />,
+    },
   ];
-
-  const next = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prev = () => {
-    setCurrentStep(currentStep - 1);
-  };
 
   const onStepSubmit = () => {
     if (currentStep < steps.length - 1) {
       next();
     } else {
-      Promise.all([
-        form.validateFields(),
-        incomesForm.validateFields(),
-        expensesForm.validateFields(),
-        savingsForm.validateFields(),
-      ])
-        .then(([budgetValues, incomeValues, expenseValues, savingsValues]) => {
+      Promise.all([form.validateFields()])
+        .then(() => {
+          onCreate(budget!);
           form.resetFields();
-          incomesForm.resetFields();
-          expensesForm.resetFields();
-          savingsForm.resetFields();
-
-          onCreate({
-            ...budgetValues,
-            incomes: [incomeValues],
-            expenses: [expenseValues],
-            savings: [savingsValues],
-          } as Omit<Budget, "id">);
+          setCurrentStep(0);
         })
         .catch((info) => {
-          console.log("Validate Failed:", info);
+          console.error("Validate Failed:", info);
         });
     }
   };
@@ -131,11 +146,17 @@ const AddBudget: React.FC<AddBudgetProps> = ({
     ? previousBudget.expenses.filter((expense) => expense.recurring)
     : [];
 
+  const handleCancel = () => {
+    setCurrentStep(0);
+    onCancel();
+    form.resetFields();
+  };
+
   return (
     <Modal
       visible={visible}
       title={title}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       footer={null}
       width={800}
     >

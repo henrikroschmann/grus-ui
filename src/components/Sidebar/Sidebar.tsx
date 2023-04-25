@@ -80,14 +80,14 @@ const Sidebar = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [setIsMobile, setCollapsed]);
+  }, [setIsMobile, setCollapsed, isAuthenticated]); // Add isAuthenticated as a dependency
 
   const renderMenuItems = (menuItems: any[], parentRoute: string) => {
     return menuItems.map((menuItem) => {
       const route = parentRoute
         ? `${parentRoute}/${menuItem.route}`
         : menuItem.route;
-
+  
       if (menuItem.items) {
         return (
           <SubMenu
@@ -99,11 +99,15 @@ const Sidebar = ({
           </SubMenu>
         );
       }
-
+  
       if (menuItem.protected && !isAuthenticated) {
-        return null; // hide the protected menu item
+        return null; // hide the protected menu item if not authenticated
       }
-
+  
+      if (!menuItem.protected && isAuthenticated) {
+        return null; // hide the menu item if authenticated
+      }
+  
       return (
         <SidebarMenuItem
           key={menuItem.key}
@@ -113,6 +117,7 @@ const Sidebar = ({
       );
     });
   };
+  
 
   return (
     <Sider
@@ -127,7 +132,6 @@ const Sidebar = ({
       }}
     >
       <div className="logo" />
-
       <Menu
         theme={theme}
         selectedKeys={selectedKeys}

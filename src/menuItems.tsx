@@ -36,7 +36,7 @@ export const items: MenuItem[] = [
   {
     title: "SignIn",
     key: "signIn",
-    icon: <UserOutlined />,
+    icon: <LoginOutlined />,
     route: "/signin",
     component: SignIn,
     protected: false
@@ -55,6 +55,6 @@ export const items: MenuItem[] = [
     icon: <LogoutOutlined />,
     route: "/signout",
     component: SignOut,
-    protected: false
+    protected: true
   },
 ];

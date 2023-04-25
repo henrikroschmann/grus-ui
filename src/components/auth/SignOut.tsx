@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Card } from "antd";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const SignOut: React.FC = () => {
-  const handleSignOut = () => {
-    console.log("Signing out...");
-    // Implement your signOut logic here
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const nav = useNavigate();
+  const handleSignOut = () => {    
+    localStorage.removeItem("token");
+    setIsAuthenticated(false)
+    nav("/signin");
   };
 
   return (
@@ -16,4 +21,5 @@ const SignOut: React.FC = () => {
     </Card>
   );
 };
+
 export default SignOut;
