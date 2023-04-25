@@ -7,6 +7,9 @@ import { GET_USER_PROFILE } from "../../graphQL/queries/getUserProfile";
 import { CREATE_BUDGET } from "../../graphQL/mutations/createBudget";
 import { UPDATE_BUDGET } from "../../graphQL/mutations/updateBudget";
 import client from "../../graphQL/client";
+import { PlusOutlined } from "@ant-design/icons";
+
+import "./Budgets.css";
 
 const Budgets: React.FC = () => {
   const [addBudgetModalVisible, setAddBudgetModalVisible] = useState(false);
@@ -69,10 +72,10 @@ const Budgets: React.FC = () => {
     setAddBudgetModalVisible(false);
   };
 
-  const handleCancelBudget =() => {
-    setEditingBudget(null)
-    setAddBudgetModalVisible(false)
-  }
+  const handleCancelBudget = () => {
+    setEditingBudget(null);
+    setAddBudgetModalVisible(false);
+  };
 
   const handleEditBudget = (budget: Budget) => {
     setEditingBudget(budget);
@@ -233,37 +236,43 @@ const Budgets: React.FC = () => {
 
   return (
     <>
-      <Row gutter={[16, 16]}>
-        <Col xs={24}>
-          <Button
-            type="primary"
-            onClick={() => {
-              setAddBudgetModalVisible(true);
-            }}
-          >
-            Add Budget
-          </Button>
-          <AddBudget
-            visible={addBudgetModalVisible}
-            onCreate={editingBudget ? handleUpdateBudget : handleCreateBudget}
-            onCancel={handleCancelBudget}
-            title={editingBudget ? "Edit Budget" : "Add Budget"}
-            okText={editingBudget ? "Update" : "Create"}
-            editingBudget={editingBudget}
-            previousBudget={data?.userProfile.budgets ?
-              data?.userProfile?.budgets[
-                data?.userProfile.budgets.length - 1
-              ] : null
-            }
-            initialStep={0}
-          />
+      <Row gutter={[16, 16]} justify="center">
+        <Col xs={24} lg={18} xl={16}>
+          <div className="budgets-header">
+            <h1 className="budgets-title">My Budgets</h1>
+            <Button
+              type="primary"
+              className="budgets-add-button"
+              onClick={() => {
+                setAddBudgetModalVisible(true);
+              }}
+            >
+              <PlusOutlined />
+              Add Budget
+            </Button>
+          </div>
           <Table
             columns={columns}
             dataSource={data?.userProfile?.budgets || []}
             rowKey="id"
+            pagination={false}
           />
         </Col>
       </Row>
+      <AddBudget
+        visible={addBudgetModalVisible}
+        onCreate={editingBudget ? handleUpdateBudget : handleCreateBudget}
+        onCancel={handleCancelBudget}
+        title={editingBudget ? "Edit Budget" : "Add Budget"}
+        okText={editingBudget ? "Update" : "Create"}
+        editingBudget={editingBudget}
+        previousBudget={
+          data?.userProfile?.budgets
+            ? data?.userProfile?.budgets[data?.userProfile?.budgets.length - 1]
+            : null
+        }
+        initialStep={0}
+      />
     </>
   );
 };

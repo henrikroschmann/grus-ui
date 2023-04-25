@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Button,
+  Card,
   Col,
   Form,
   Input,
@@ -8,9 +9,11 @@ import {
   Row,
   Space,
   Switch,
+  Table,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Expense } from "../../types/gql-types";
+import Column from "antd/es/table/Column";
 
 const layout = {
   labelCol: { span: 8 },
@@ -33,21 +36,24 @@ const AddEditExpense: React.FC<AddEditExpenseProps> = ({
       : previousValues) ?? [];
 
   return (
-    <Form {...layout} initialValues={{ expenses: expenses }} form={form}>
-      <Form.List name="expenses" initialValue={expenses}>
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map((field) => (
-              <Space
-                key={field.key}
-                style={{ display: "flex" }}
-                align="baseline"
+    <Card className="expense-card">
+      <Form {...layout} initialValues={{ expenses: expenses }} form={form}>
+        <Form.List name="expenses" initialValue={expenses}>
+          {(fields, { add, remove }) => (
+            <>
+              <Table
+                dataSource={fields}
+                rowKey={(record) => record.key}
+                pagination={false}
               >
-                <Row gutter={16} style={{ width: "100%" }}>
-                  <Col span={8}>
+                <Column
+                  title="Category"
+                  dataIndex={["category"]}
+                  key="category"
+                  render={(text, record: any, index) => (
                     <Form.Item
-                      {...field}
-                      name={[field.name, "category"]}
+                      name={[record?.name, "category"]}
+                      fieldKey={[record.fieldKey, "category"]}
                       rules={[
                         {
                           required: true,
@@ -57,11 +63,16 @@ const AddEditExpense: React.FC<AddEditExpenseProps> = ({
                     >
                       <Input placeholder="Category" />
                     </Form.Item>
-                  </Col>
-                  <Col span={8}>
+                  )}
+                />
+                <Column
+                  title="Description"
+                  dataIndex={["description"]}
+                  key="description"
+                  render={(text, record: any, index) => (
                     <Form.Item
-                      {...field}
-                      name={[field.name, "description"]}
+                      name={[record.name, "description"]}
+                      fieldKey={[record.fieldKey, "description"]}
                       rules={[
                         {
                           required: true,
@@ -71,11 +82,16 @@ const AddEditExpense: React.FC<AddEditExpenseProps> = ({
                     >
                       <Input placeholder="Description" />
                     </Form.Item>
-                  </Col>
-                  <Col span={4}>
+                  )}
+                />
+                <Column
+                  title="Amount"
+                  dataIndex={["amount"]}
+                  key="amount"
+                  render={(text, record: any, index) => (
                     <Form.Item
-                      {...field}
-                      name={[field.name, "amount"]}
+                      name={[record.name, "amount"]}
+                      fieldKey={[record.fieldKey, "amount"]}
                       rules={[
                         {
                           required: true,
@@ -88,38 +104,57 @@ const AddEditExpense: React.FC<AddEditExpenseProps> = ({
                         },
                       ]}
                     >
-                      <InputNumber placeholder="Amount" />
+                      <InputNumber
+                        placeholder="Amount"
+                        style={{ width: "100%" }}
+                      />
                     </Form.Item>
-                  </Col>
-                  <Col span={4}>
+                  )}
+                />
+                <Column
+                  title="Recurring"
+                  dataIndex={["recurring"]}
+                  key="recurring"
+                  render={(text, record: any, index) => (
                     <Form.Item
-                      {...field}
-                      name={[field.name, "recurring"]}
+                      name={[record.name, "recurring"]}
                       valuePropName="checked"
                     >
                       <Switch />
                     </Form.Item>
-                  </Col>
-                  <Col span={2}>
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
-                  </Col>
-                </Row>
-              </Space>
-            ))}
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => add()}
-                icon={<PlusOutlined />}
-                style={{ width: "100%" }}
-              >
-                Add Expense
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-    </Form>
+                  )}
+                />
+                <Column
+                  title=""
+                  key="actions"
+                  render={(text, record: any, index) => (
+                    <Button
+                      type="link"
+                      onClick={() => remove(record?.name)}
+                      danger
+                    >
+                      Remove
+                    </Button>
+                  )}
+                />
+              </Table>
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  Add Expense
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+      </Form>
+    </Card>
   );
 };
 

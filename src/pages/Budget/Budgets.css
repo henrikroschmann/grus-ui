@@ -1,0 +1,25 @@
+.budgets-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  
+  .budgets-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .budgets-add-button {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    font-size: 16px;
+    margin-left: 16px;
+  }
+  
+  .budgets-add-button > .anticon {
+    margin-right: 8px;
+  }
+  
