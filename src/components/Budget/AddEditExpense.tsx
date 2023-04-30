@@ -2,18 +2,18 @@ import React from "react";
 import {
   Button,
   Card,
-  Col,
   Form,
   Input,
   InputNumber,
-  Row,
-  Space,
+  Select,
   Switch,
   Table,
 } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Expense } from "../../types/gql-types";
+import { PlusOutlined } from "@ant-design/icons";
+import { Expense, ExpenseCategory } from "../../types/gql-types";
 import Column from "antd/es/table/Column";
+
+const { Option } = Select;
 
 const layout = {
   labelCol: { span: 8 },
@@ -57,11 +57,18 @@ const AddEditExpense: React.FC<AddEditExpenseProps> = ({
                       rules={[
                         {
                           required: true,
-                          message: "Please input the expense category!",
+                          message: "Please select the expense category!",
                         },
                       ]}
                     >
-                      <Input placeholder="Category" />
+                      <Select placeholder="Category">
+                        <Option value={ExpenseCategory.ESSENTIAL}>
+                          {ExpenseCategory.ESSENTIAL}
+                        </Option>
+                        <Option value={ExpenseCategory.NON_ESSENTIAL}>
+                          {ExpenseCategory.NON_ESSENTIAL}
+                        </Option>
+                      </Select>
                     </Form.Item>
                   )}
                 />

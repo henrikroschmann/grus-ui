@@ -25,6 +25,10 @@ const DeleteUserButton: React.FC = () => {
     }
   };
 
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <Button danger onClick={handleClick} loading={loading}>
       Delete Account

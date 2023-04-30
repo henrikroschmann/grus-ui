@@ -6,6 +6,7 @@ import {
   Saving,
   Budget,
   UserProfile,
+  ExpenseCategory,
 } from "../types/gql-types";
 
 function generateMockIncome(): Income {
@@ -19,7 +20,7 @@ function generateMockIncome(): Income {
 function generateMockExpense(): Expense {
   return {
     id: faker.datatype.uuid(),
-    category: faker.commerce.department(),
+    category: faker.helpers.arrayElement(Object.values(ExpenseCategory)),
     description: faker.commerce.productName(),
     amount: parseFloat(faker.finance.amount()),
     recurring: faker.datatype.boolean(),

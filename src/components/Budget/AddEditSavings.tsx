@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Card, Form, Input, InputNumber, Space, Table } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Card, Form, Input, InputNumber, Table } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { Saving } from "../../types/gql-types";
 import Column from "antd/es/table/Column";
 

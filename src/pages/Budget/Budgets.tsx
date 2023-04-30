@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Row, Col, Table, Space, Popconfirm } from "antd";
 import AddBudget from "../../components/Budget/AddBudget";

@@ -2,18 +2,12 @@ import React from "react";
 import {
   Button,
   Card,
-  Col,
   Form,
   Input,
   InputNumber,
-  Row,
-  Space,
   Table,
 } from "antd";
 import {
-  DollarCircleOutlined,
-  DollarOutlined,
-  MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import { Income } from "../../types/gql-types";
@@ -42,7 +36,7 @@ const AddEditIncome: React.FC<AddEditIncomeProps> = ({
       : previousValues) ?? [];
 
   return (
-    <Card className="income-card" >
+    <Card className="income-card">
       <Form {...layout} initialValues={{ incomes: incomes }} form={form}>
         <Form.List name="incomes" initialValue={incomes}>
           {(fields, { add, remove }) => (
@@ -129,160 +123,6 @@ const AddEditIncome: React.FC<AddEditIncomeProps> = ({
         </Form.List>
       </Form>
     </Card>
-
-    // <Form
-    //   {...layout}
-    //   initialValues={{ incomes: incomes }}
-    //   form={form}
-    //   className="income-form"
-    // >
-    //   <div className="income-header">
-    //     <h2 className="income-title">Income</h2>
-    //     <Button
-    //       type="primary"
-    //       icon={<PlusOutlined />}
-    //       onClick={() => console.log("s")}
-    //       size="large"
-    //       className="income-add-btn"
-    //     >
-    //       Add Income
-    //     </Button>
-    //   </div>
-    //   <Form.List name="incomes" initialValue={incomes}>
-    //     {(fields, { add, remove }) => (
-    //       <>
-    //         {fields.map((field, index) => (
-    //           <Row key={field.key} gutter={[12, 16]} className="income-row">
-    //             <Col xs={12}>
-    //               <Form.Item
-    //                 {...field}
-    //                 name={[field.name, "source"]}
-    //                 rules={[
-    //                   {
-    //                     required: true,
-    //                     message: "Please input the income source!",
-    //                   },
-    //                 ]}
-    //               >
-    //                 <Input
-    //                   placeholder="Income Source"
-    //                   size="large"
-    //                   className="income-input"
-    //                 />
-    //               </Form.Item>
-    //             </Col>
-    //             <Col xs={10}>
-    //               <Form.Item
-    //                 {...field}
-    //                 name={[field.name, "amount"]}
-    //                 rules={[
-    //                   {
-    //                     required: true,
-    //                     message: "Please input the income amount!",
-    //                   },
-    //                   {
-    //                     type: "number",
-    //                     min: 0,
-    //                     message: "Amount should be a positive number",
-    //                   },
-    //                 ]}
-    //               >
-    //                 <InputNumber
-    //                   placeholder="Amount"
-    //                   size="large"
-    //                   className="income-input"
-    //                 />
-    //               </Form.Item>
-    //             </Col>
-    //             <Col xs={2}>
-    //               {index > 0 && (
-    //                 <MinusCircleOutlined
-    //                   onClick={() => remove(field.name)}
-    //                   className="income-remove-icon"
-    //                 />
-    //               )}
-    //             </Col>
-    //           </Row>
-    //         ))}
-    //       </>
-    //     )}
-    //   </Form.List>
-    // </Form>
-
-    // <Form
-    //   {...layout}
-    //   initialValues={{ incomes: incomes }}
-    //   form={form}
-    //   className="income-form"
-    // >
-    //   <h2 style={{ marginBottom: 20 }}>Income</h2>
-    //   <Form.List name="incomes" initialValue={incomes}>
-    //     {(fields, { add, remove }) => (
-    //       <>
-    //         {fields.map((field, index) => (
-    //           <Row key={field.key} gutter={12} className="income-row" style={{ marginBottom: '16px' }}>
-    //             <Col span={8}>
-    //               <Form.Item
-    //                 {...field}
-    //                 name={[field.name, "source"]}
-    //                 rules={[
-    //                   {
-    //                     required: true,
-    //                     message: "Please input the income source!",
-    //                   },
-    //                 ]}
-    //               >
-    //                 <Input placeholder="Income Source" size="large" />
-    //               </Form.Item>
-    //             </Col>
-    //             <Col span={8}>
-    //               <Form.Item
-    //                 {...field}
-    //                 name={[field.name, "amount"]}
-    //                 rules={[
-    //                   {
-    //                     required: true,
-    //                     message: "Please input the income amount!",
-    //                   },
-    //                   {
-    //                     type: "number",
-    //                     min: 0,
-    //                     message: "Amount should be a positive number",
-    //                   },
-    //                 ]}
-    //               >
-    //                 <InputNumber
-    //                   placeholder="Amount"
-    //                   size="large"
-    //                   style={{ width: "100%" }}
-    //                 />
-    //               </Form.Item>
-    //             </Col>
-    //             <Col span={8} className="income-remove-col">
-    //               {index > 0 && (
-    //                 <MinusCircleOutlined
-    //                   onClick={() => remove(field.name)}
-    //                   className="income-remove-icon"
-    //                 />
-    //               )}
-    //             </Col>
-    //           </Row>
-    //         ))}
-    //         <Form.Item style={{ marginTop: 16 }}>
-    //           <Button
-    //             type="dashed"
-    //             onClick={() => add()}
-    //             icon={<PlusOutlined />}
-    //             size="large"
-    //             style={{ width: "100%" }}
-    //           >
-    //             Add Income
-    //           </Button>
-    //         </Form.Item>
-    //       </>
-    //     )}
-    //   </Form.List>
-    // </Form>
   );
 };
 
