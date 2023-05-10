@@ -1,6 +1,5 @@
 import { Form, Input } from "antd";
 import { Budget } from "../../types/gql-types";
-import "moment/locale/en-gb";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 
